@@ -1,0 +1,204 @@
+definitions:
+  errcode.Error:
+    properties:
+      code:
+        type: integer
+      details:
+        items:
+          type: string
+        type: array
+      msg:
+        type: string
+    type: object
+  model.Order:
+    properties:
+      id:
+        type: integer
+      owner:
+        type: string
+      price:
+        type: integer
+      price_policy:
+        description: limit price / market price
+        type: integer
+      quantity:
+        type: integer
+      type:
+        description: Buy / Sell
+        type: integer
+    type: object
+info:
+  contact: {}
+  description: MU-Trading-System
+  license: {}
+  termsOfService: https://github.com/mu8086/trading-system
+  title: 交易系統
+  version: "1.0"
+paths:
+  /api/v1/orders:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Order'
+        "400":
+          description: 請求錯誤
+          schema:
+            $ref: '#/definitions/errcode.Error'
+        "500":
+          description: 內部錯誤
+          schema:
+            $ref: '#/definitions/errcode.Error'
+      summary: 取得多個訂單
+    post:
+      parameters:
+      - description: 訂單擁有者
+        in: query
+        maxLength: 255
+        minLength: 3
+        name: owner
+        required: true
+        type: string
+      - description: 訂單種類, 1為買, 2為賣
+        enum:
+        - 1
+        - 2
+        in: query
+        name: type
+        required: true
+        type: integer
+      - description: 交易數量
+        in: query
+        name: quantity
+        required: true
+        type: integer
+      - description: 交易價格
+        in: query
+        name: price
+        required: true
+        type: integer
+      - default: 1
+        description: 價格原則, 1為限價, 2為市價
+        enum:
+        - 1
+        - 2
+        in: query
+        name: price_policy
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Order'
+        "400":
+          description: 請求錯誤
+          schema:
+            $ref: '#/definitions/errcode.Error'
+        "500":
+          description: 內部錯誤
+          schema:
+            $ref: '#/definitions/errcode.Error'
+      summary: 新增訂單
+  /api/v1/orders/{id}:
+    delete:
+      parameters:
+      - description: 訂單編號
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Order'
+        "400":
+          description: 請求錯誤
+          schema:
+            $ref: '#/definitions/errcode.Error'
+        "500":
+          description: 內部錯誤
+          schema:
+            $ref: '#/definitions/errcode.Error'
+      summary: 刪除訂單
+    get:
+      parameters:
+      - description: 訂單編號
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Order'
+        "400":
+          description: 請求錯誤
+          schema:
+            $ref: '#/definitions/errcode.Error'
+        "500":
+          description: 內部錯誤
+          schema:
+            $ref: '#/definitions/errcode.Error'
+      summary: 取得單個訂單
+    put:
+      parameters:
+      - description: 訂單編號
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 訂單擁有者
+        in: query
+        maxLength: 255
+        name: owner
+        type: string
+      - description: 訂單種類, 1為買, 2為賣
+        enum:
+        - 1
+        - 2
+        in: query
+        name: type
+        type: integer
+      - description: 交易數量
+        in: query
+        name: quantity
+        type: integer
+      - description: 交易價格
+        in: query
+        name: price
+        type: integer
+      - description: 價格原則, 1為限價, 2為市價
+        enum:
+        - 1
+        - 2
+        in: query
+        name: price_policy
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.Order'
+        "400":
+          description: 請求錯誤
+          schema:
+            $ref: '#/definitions/errcode.Error'
+        "500":
+          description: 內部錯誤
+          schema:
+            $ref: '#/definitions/errcode.Error'
+      summary: 更新訂單
+swagger: "2.0"
