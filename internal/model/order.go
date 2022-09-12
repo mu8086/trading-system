@@ -1,6 +1,8 @@
 package model
 
 import (
+	"fmt"
+
 	"gorm.io/gorm"
 )
 
@@ -13,8 +15,37 @@ type Order struct {
 	PricePolicy uint8  `json:"price_policy"` // limit price / market price
 }
 
+const (
+	Buy		int = iota + 1
+	Sell
+)
+
+const (
+	Limit	int = iota + 1
+	Market
+)
+
 func (o Order) TableName() string {
 	return "trading_order"
+}
+
+func (o Order) String() string {
+	var t, pricePolicy string
+
+	if o.Type == 1 {
+		t = " Buy"
+	} else if o.Type == 2 {
+		t = "Sell"
+	}
+
+	if o.PricePolicy == 1 {
+		pricePolicy = "Limit"
+	} else if o.PricePolicy == 2 {
+		pricePolicy = "Market"
+	}
+
+	return fmt.Sprintf("ID: %5v, Owner: %10v, Type: %4v, Quantity: %5v, Price: %5v, PricePolicy: %6v",
+		o.ID, o.Owner, t, o.Quantity, o.Price, pricePolicy)
 }
 
 func (o Order) List(db *gorm.DB, pageOffset, pageSize int) ([]*Order, error) {
@@ -25,7 +56,7 @@ func (o Order) List(db *gorm.DB, pageOffset, pageSize int) ([]*Order, error) {
 		db = db.Offset(pageOffset).Limit(pageSize)
 	}
 
-	if err = db.Where("type != ?", 0).Find(&orders).Error; err != nil {
+	if err = db.Find(&orders).Error; err != nil {
 		return nil, err
 	}
 

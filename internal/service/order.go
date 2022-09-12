@@ -5,14 +5,6 @@ import (
 	"trading-system/pkg/app"
 )
 
-type CountOrderRequest struct {
-	Owner       string `form:"owner"                    binding:"max=255"`
-	Type        uint8  `form:"type"                     binding:"oneof=1 2"`
-	Quantity    uint32 `form:"quantity"                 binding:"gt=0"`
-	Price       uint32 `form:"price"                    binding:"gt=0"`
-	PricePolicy uint8  `form:"price_policy,default=1"   binding:"oneof=1 2"`
-}
-
 type OrderListRequest struct {}
 
 type GetOrderRequest struct {

@@ -18,3 +18,5 @@
 
 cmd/trading-system/configs/config.yaml
 storage/logs/
+cmd/trading-system/storage/logs/app.log
+cmd/trading-system/__debug_bin

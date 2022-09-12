@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"time"
+	"trading-system/cmd/trading-system/app/matching"
 	"trading-system/global"
 	"trading-system/internal/model"
 	"trading-system/internal/routers"
@@ -46,7 +47,8 @@ func main() {
 		MaxHeaderBytes: 1 << 20,
 	}
 
-	//router.Run(":8000")
+	go matching.Match()
+
 	s.ListenAndServe()
 }
 
@@ -55,16 +57,16 @@ func setupSetting() error {
 	if err != nil {
 		return err
 	}
-	err = setting.ReadSection("Server", &global.ServerSetting)
-	if err != nil {
+	if err = setting.ReadSection("Server", &global.ServerSetting); err != nil {
 		return err
 	}
-	err = setting.ReadSection("App", &global.AppSetting)
-	if err != nil {
+	if err = setting.ReadSection("App", &global.AppSetting); err != nil {
 		return err
 	}
-	err = setting.ReadSection("Database", &global.DatabaseSetting)
-	if err != nil {
+	if err = setting.ReadSection("Database", &global.DatabaseSetting); err != nil {
+		return err
+	}
+	if err = setting.ReadSection("Match", &global.MatchSetting); err != nil {
 		return err
 	}
 
